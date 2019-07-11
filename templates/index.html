@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<head>
+    <title>Tempertaure</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+<body>
+	<h1> James' Graph</h1>
+	<canvas id="myChart">
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+let times = [];
+let temperatures= [];
+function graph(lab,dat) {
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: lab,
+            datasets: [{
+                label: 'Temperature',
+                borderColor: 'rgb(255, 99, 132)',
+                data: dat,
+                fill: false
+            }]
+        },
+
+        options: {
+            scales: {
+                yAxes: [{
+                    
+                    ticks: {
+                    
+                }
+                }]
+            }
+        }
+    });
+
+}
+
+graph([],[]);
+
+
+setInterval(function(){
+    fetch('http://localhost:8080/data')
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+    console.log(JSON.stringify(myJson));
+    
+
+    if (temperatures.length==10) {
+        temperatures.shift();
+    }
+
+    if (times.length==10) {
+        times.shift();
+    }
+    times.push(myJson.Time);
+    temperatures.push(myJson.Temperature);
+    graph(times,temperatures);
+  });
+ }, 1000);
+
+
+</script>
+</canvas>
+	
+</body>
+</html>
